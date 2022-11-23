@@ -11,10 +11,10 @@ db = firestore.client()
 
 def firebase_write(collection_name, new_dic_list): # 데이터 쓰기
     try:
-        dic_title_list = [i['name'] for i in firebase_read(collection_name)]
+        dic_name_list = [i['name'] for i in firebase_read(collection_name)]
 
         for dic in new_dic_list:
-            if dic['name'] not in dic_title_list:
+            if dic['name'] not in dic_name_list:
                 db.collection(u'{}'.format(collection_name)).document().set(dic)
 
     except:

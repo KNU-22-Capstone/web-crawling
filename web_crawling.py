@@ -19,8 +19,23 @@ def run():  # 전체 실행
     dic_list = []
 
     musinsa()
+    lookpin()
+    hiver()
+    _29cm()
 
     return dic_list
+
+def web_crawling(url):
+    try:
+        global dic_list
+        time.sleep(0.5)     # 크롤링 차단 방지
+
+        req = urllib.request.Request(url =url, headers=header)
+        url_open = urllib.request.urlopen(req)
+        return BeautifulSoup(url_open, "html.parser")
+
+    except:
+        print("url 접속 실패")
 
 def musinsa():  # 무신사 크롤링
     numberring = {'SHORT_SLEEVE':'001001', 'SHIRTS':'001002', 'LONG_SLEEVE':'001010', 'HOODIE':'001004',
@@ -32,7 +47,33 @@ def musinsa():  # 무신사 크롤링
             for j in tag[i]:
                 for n in range(1, 2):
                     print(f'musinsa {i} > {j} > {n} 페이지')
-                    web_crawling('musinsa', i, j, f'https://www.musinsa.com/categories/item/{numberring[j]}?d_cat_cd={numberring[j]}&brand=&list_kind=small&sort=pop_category&sub_sort=&page={n}&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure=')
+                    bs_obj = web_crawling(f'https://www.musinsa.com/categories/item/{numberring[j]}?d_cat_cd={numberring[j]}&brand=&list_kind=small&sort=pop_category&sub_sort=&page={n}&display_cnt=90&group_sale=&exclusive_yn=&sale_goods=&timesale_yn=&ex_soldout=&kids=&color=&price1=&price2=&shoeSizeOption=&tags=&campaign_id=&includeKeywords=&measure=')
+
+                    li_box = bs_obj.find("div", {"class", "list-box box"})
+
+                    article_info = li_box.findAll("div", {"class", "article_info"})  # 상품 정보
+                    lazyload = li_box.findAll("img", {"class", "lazyload lazy"})  # 이미지
+
+                    for ai in range(len(article_info)):
+                        a_tag = article_info[ai].find("p", {"class", "list_info"}).find("a")  # 제목 주소
+
+                        p_tag = article_info[ai].find("p", {"class", "price"}).text  # 가격
+                        p_tag = p_tag.split('\n')[2]
+                        for c in [' ', '원', '\n', ',']:
+                            p_tag = p_tag.replace(c, "")
+
+                        picture = lazyload[ai]['data-original']     # 이미지
+                        extension = picture[-4:]
+                        picture = picture[:-7] + '500' + extension  # 이미지 확대
+
+                        dic_list.append({'name': a_tag['title'],
+                                         'price': int(p_tag),
+                                         'major_tag': i,
+                                         'detail_tag': j,
+                                         'picture_URL': picture,
+                                         'site_URL': a_tag['href'][2:],
+                                         'site_name': 'musinsa',
+                                         'views': 0})
     except:
         print("무신사 크롤링 실패")
 # 무신사 주소
@@ -79,43 +120,6 @@ def hiver():    # 하이버 크롤링
 
 def _29cm():    # 29cm 크롤링
     pass
-
-
-def web_crawling(site, major_tag, detail_tag, url):
-    try:
-        global dic_list
-        time.sleep(0.5)     # 크롤링 차단 방지
-
-        req = urllib.request.Request(url =url, headers=header)
-        url_open = urllib.request.urlopen(req)
-        bs_obj = BeautifulSoup(url_open, "html.parser")
-
-        li_box = bs_obj.find("div", {"class", "list-box box"})
-
-        article_info = li_box.findAll("div", {"class", "article_info"})
-        lazyload = li_box.findAll("img", {"class", "lazyload lazy"})
-
-        for ai in range(len(article_info)):
-            a_tag = article_info[ai].find("p", {"class", "list_info"}).find("a")
-            p_tag = article_info[ai].find("p", {"class", "price"}).text
-            for c in [' ','원','\n',',']:
-                p_tag = p_tag.replace(c, "")
-
-            picture = lazyload[ai]['data-original']
-            picture = picture[:-7]+'500.jpg'
-
-            dic_list.append({'name':a_tag['title'],
-                             'price':int(p_tag),
-                             'detail_tag':detail_tag,
-                             'picture_URL':picture,
-                             'site_URL':a_tag['href'][2:],
-                             'site_name':site,
-                             'major_tag':major_tag,
-                             'views':0})
-    except:
-        print("크롤링 실패")
-
-
 
 
 if __name__ == '__main__':
