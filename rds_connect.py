@@ -15,7 +15,7 @@ def run(dic_list):
             else:
                fail += 1
 
-        print(f"\n성공 : {success}개 , 실패 : {fail}")
+        print(f"\n성공 : {success}개 , 실패 : {fail}개")
 
         conn.commit()
         conn.close()
@@ -48,7 +48,6 @@ def insert(cursor, dic, count):
         print(f"[{count}]  " + "삽입 성공 :", dic["name"])
         return count, True
     except:
-        print(f"[{count}]  " + "삽입 실패 :", dic["name"])
         return count + 1, False
 
 if  __name__ == "__main__":

@@ -13,6 +13,7 @@ def json_write_dict(src, dic):
     try:
         with open(src,'w', encoding='utf-8') as f:
             json.dump(dic, f, indent="\t")
+            print("파일 쓰기 성공")
             return True
     except:
         print("파일 쓰기 실패")

@@ -21,10 +21,10 @@ tag = {'TOP':['SHORT_SLEEVE','SHIRTS','LONG_SLEEVE','HOODIE'],
 dic_list = []
 page_size = 0
 
-def run():  # 전체 실행
+def run(size=1):  # 전체 실행
     global dic_list, page_size
     dic_list = []
-    page_size = 1
+    page_size = size
 
     musinsa()
     lookpin()
@@ -236,7 +236,7 @@ def _29cm():    # 29cm 크롤링
             'COTTON_PANTS': '272100100&category_medium_code=272104100&category_small_code=272104105&sort=latest',
             'COAT': '272100100&category_medium_code=272102100&category_small_code=272102101&sort=latest',
             'JACKET': '272100100&category_medium_code=272102100&category_small_code=272102111&sort=latest',
-            'CARDIGAN': '272100100&category_medium_code=272102100&category_small_code=272102108&sort=latest',
+            'CARDIGAN': '272100100&category_medium_code=272110100&category_small_code=272110104&sort=latest',
             'SNEAKERS': '274100100&category_medium_code=274101100',
             'DRESS_SHOES': '274100100&category_medium_code=274103100',
             'HAT': '275100100&category_medium_code=275101100'}
